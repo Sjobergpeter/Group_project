@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+books
+{% endblock %}
+
+{% block content %}
+<h3>En bök att läsa 👑</h3>
+    <div class="alert alert-primary" role="alert">
+        <p><img src="{{ cover }}"></p>
+        <p>Titel: {{ title }}</p>
+        <p>Förtfattare: {{ author }}</p>
+        <p>{{ downloads_number }} personer har laddat ned böcken!</p>
+    </div>
+    <div class="alert alert-warning" role="alert">
+        <p><a href="{{ read_link }}">Ladda ned nu!</a></p>
+    </div>
+{% endblock %}
