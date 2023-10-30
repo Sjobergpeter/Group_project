@@ -2,6 +2,8 @@ from flask import Flask, render_template
 import requests
 import random
 
+from application import func
+
 app= Flask(__name__)
 
 
