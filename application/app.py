@@ -7,6 +7,35 @@ from application import func
 app= Flask(__name__)
 
 
+@app.route("/")
+def weather():
+    # Hämtar data om användaren
+    info = func.json_loads_on_uncorrected_list("http://ipinfo.io/json")
+
+    # Hämtar koordinater från den datan om användaren
+    lat = info["loc"].split(",")[0]
+    lon = info["loc"].split(",")[1]
+
+    # Ser regn och molntäcke på de koordinaterna
+    weather = func.json_loads_on_uncorrected_list(f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=rain,cloudcover&forecast_days=1")
+
+    cloudcover = (weather['current']['cloudcover'])
+    rain = (weather["current"]["rain"])
+
+    # uppdaterar länken på knappen på hemsidan beroende på vädret
+    link = None
+    if rain != 0:
+        link = "books"
+
+    elif  rain == 0 and cloudcover < 40:
+        link = "badplatser"
+
+    else:
+        link = "nästa aktivitet endpoint"
+
+    
+    return render_template("index.html", link=link)
+
 # Endpoint för badplatser
 @app.route("/badplatser")
 def beaches_in_Sthml():
