@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 import random
+from . import app, func
 
 from application import func
 
@@ -111,14 +112,51 @@ def books():
         except:
             author = "Unknown"
         downloads_number = random_book['download_count']
-        read_link = random_book['formats']['text/html']
-        cover = random_book['formats']['image/jpeg']
+        try:
+            read_link = random_book['formats']['text/html']
+        except:
+            read_link = "https://gutenberg.org/"
+        try:
+            cover = random_book['formats']['image/jpeg']
+        except:
+            cover = "Ingen omslagsbild laddades"
 
         
     else:
         title = "Boken misslyckades med att laddas!"
 
     return render_template('books.html', title=title, author=author, downloads_number=downloads_number, read_link=read_link, cover=cover)
+  
+
+
+@app.route("/books_form", methods =["GET", "POST"])
+
+def books_form():
+
+    if request.method == 'POST':
+    
+        topic = request.form.get('topic')
+
+        api_url = f"https://gutendex.com/books/?topic={topic}"
+        
+        response = requests.get(api_url)
+
+        # if the api is responsive
+        if response.status_code == 200:
+
+            #getting the full response from a webpage
+            books = response.json()
+
+            data = func.build_df(books)
+
+        else:
+            data = "Boker misslyckades med att laddas!"
+        
+        return render_template('books_form.html', data=data)
+
+    else:
+
+        return render_template('books_form.html')
   
 
 if __name__ == "__main__":
