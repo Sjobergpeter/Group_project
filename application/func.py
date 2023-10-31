@@ -5,15 +5,6 @@ import json
 import pandas as pd
 
 
-def correct_unicode(string):
-    """Funktion för att ändra unicode till svenska specialtecken"""
-
-    ## Ändra unicode till svenska bokstäver.
-    corrected_name = string.encode('latin-1').decode('unicode_escape')
-
-    ## Returnerar korrigerat namn
-    return corrected_name
-
 
 def json_loads_on_uncorrected_list(data_url):
     """Funktion för att omvandla json data från API till python."""

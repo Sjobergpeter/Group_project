@@ -4,6 +4,7 @@ import random
 from . import app, func
 
 from application import func
+import pandas as pd
 
 app= Flask(__name__)
 
@@ -48,15 +49,65 @@ def beaches_in_Sthml():
     ## Anropar funktionen som konverterar json data till python och sparar i variabel.
     beach_list=func.json_loads_on_uncorrected_list(data_url)
 
-    ## Lista på badplatser med unicode och badplatsen koordinater
+    ## Lista på badplatser med tillhörande url för detaljerad info
     beach_info = []
 
-    for b in beach_list["data"]:
-        beach_name_unicode=b["attributes"]["name"]
-        beach_coordinate=b["attributes"]["location"]
-        beach_info.append({"name": beach_name, "location": beach_coordinate})
+    ## Iteration för att spara namn och url för varje badplats som dictionary i listan beach_info
+    for info in beach_list["data"]:
+        beach_name_unicode=info["attributes"]["name"]
+        beach_link = info["links"]["self"]
+        beach_info.append({"name": beach_name_unicode, "url": beach_link})
 
-    return beach_info
+    ## Iteration för att komma åt varje enskild badplats url.
+    url_list=[]
+    for url in beach_info:
+        data_url = url["url"]
+        url_list.append(data_url)
+
+
+    ## Lägga stadsdel för badplatser som ordbok i en lista.
+    beach_name_info = []
+
+    for one_url in url_list:
+        """Här inhämtar jag mer info från en annan API"""
+        beach_url = func.json_loads_on_uncorrected_list(one_url)
+        for detailed_info in beach_url["included"]:
+            if "name" in detailed_info["attributes"]:
+                beach_location = detailed_info["attributes"]["name"]
+                beach_name_info.append({"location": beach_location})
+                break
+
+    ## Här skapar jag en lista med ordböcker som jag får vid sammanslagningen av 2 olika listor.
+    complete_beach_list=[]
+
+    ## Använder funktionen zip för sammanslagningen av listorna med mer info om varje badplats.
+    for a, b in zip(beach_info, beach_name_info):
+        complete_dict=dict(list(a.items()) + list(b.items()))
+        complete_beach_list.append(complete_dict)
+
+    # Funktion för att söka stränder på samma location:
+    #search_place = "Bromma"
+    #for place in complete_beach_list:
+        #if place["location"]== search_place:
+            #return place["name"]
+
+    # Funktion för att söka badplats och visa location
+    #search_beach = "Tanto strandbad"
+    #for place in complete_beach_list:
+        #if place["name"]== search_beach:
+            #return place["location"]
+
+    ## Ny lista, nu väljer jag kolumnnamn till tabellen istället för nycklar.
+    list_column_name = [{"Badplats": element["name"], "Stadsdel": element["location"]} for element in complete_beach_list]
+
+    ## Konverterar listan till en tabell med pandas, utan index.
+    df = pd.DataFrame(list_column_name)
+    table_data=df.to_html(index=False)
+
+    return table_data
+
+    # Med denna return visas html template med rullista så att man kan välja bad/ställe:
+    ## render_template("badplats.html", complete_beach_list=complete_beach_list)
 
 
 @app.route("/books")
