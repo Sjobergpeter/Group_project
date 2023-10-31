@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Badplatser</title>
+</head>
+<body>
+    </select>
+        <label for="location">Stadsdel</label><br/>
+        <select class="form-select" aria-label="Default select example" name="">
+          <option selected>Välj stadsdel</option>
+            {% for location in complete_beach_list %}
+                <option value="{{ location.location  }}">{{ location["location"] }}</option>
+            {% endfor %}
+    </select>
+</body>
+</html>
