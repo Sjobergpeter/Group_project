@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request
 import requests
 import random
-from . import app, func
-
+from . import func
 from application import func
 import pandas as pd
 
