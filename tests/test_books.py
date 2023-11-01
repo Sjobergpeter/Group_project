@@ -1,6 +1,7 @@
 from flask.testing import FlaskClient
 import pytest
-from application import app, func
+from application import app
+from application import func
 
 @pytest.fixture
 def client():
@@ -20,11 +21,11 @@ def test_index_online(client: FlaskClient):
 def test_build_df():
     '''GIVEN that the df is empty
     WHEN df is built
-    THEN the user gets a string answer'''
+    THEN the user gets a custom error message'''
 
-    books={}
+    books = {'results': []}
 
     data = func.build_df(books)
 
-    assert isinstance(data, str)
-
+    expected_error_message = "Försök igen med ett annat ord! Ingenting hittades."
+    assert data == expected_error_message
