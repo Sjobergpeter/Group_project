@@ -1,3 +1,3 @@
 # Group_project
 
-# Samlas onsdag 14:00 på discord
+# Samlas onsdag 12:00 på discord

@@ -33,7 +33,7 @@ def weather():
         link = "badplatser"
 
     else:
-        link = "nästa aktivitet endpoint"
+        link = "film"
 
     
     return render_template("index.html", link=link)
@@ -208,6 +208,11 @@ def books_form():
     else:
 
         return render_template('books_form.html')
+    
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template("/errorhandler.html")
   
 
 if __name__ == "__main__":
