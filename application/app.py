@@ -219,7 +219,7 @@ def books_form():
 
         return render_template('books_form.html')
     
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/film', methods=['GET', 'POST'])
 
 def movie_viewer():
     if request.method == 'POST':
