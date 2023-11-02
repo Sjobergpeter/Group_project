@@ -13,4 +13,4 @@ def test_random_anything(client):
     assert response.status_code == 200
 
     data = response.get_data(as_text=True)
-    assert "Hämta något" in data  # Ändra detta till den exakta texten du förväntar dig i din template
+    assert "Hämta något" in data  
