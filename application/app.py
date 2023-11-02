@@ -223,17 +223,22 @@ def books_form():
 
 def movie_viewer():
     if request.method == 'POST':
-        movie_name = request.form['movie_name']
+        movie_names = []
+        with open ('movie_list.txt', 'r') as file:
+            for line in file:
+                movie_names.append(line.strip())
+        random_movie_name = random.choice(movie_names)
+
         # api key for omdb
         api_key = "1d6bf689"
-        url = f"https://www.omdbapi.com/?t={movie_name}&apikey={api_key}"
+        url = f"https://www.omdbapi.com/?t={random_movie_name}&apikey={api_key}"
         response = requests.get(url)
 
         if response.status_code == 200:
             movie_info = response.json()
 
             if movie_info:
-                return render_template('index.html', movie_info=movie_info)
+                return render_template('film.html', movie_info=movie_info)
             
         return "Movie information not found."
     
