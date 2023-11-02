@@ -14,14 +14,18 @@ def json_loads(data_url):
     ## Uppkopplingen mot API:et behöver inte vara krypterat.
     context = ssl._create_unverified_context()
 
-    json_data = urllib.request.urlopen(data_url, context=context).read()
+    ## Som visats på lektion 6 så måste vi hantera fel som ligger utanför vår kontroll, som att API inte kan nås
+    try:
+        json_data = urllib.request.urlopen(data_url, context=context).read()
 
-    ## Gör om json till en dictionary som är fullt läsbar med Python
-    data = json.loads(json_data)
+        ## Gör om json till en dictionary som är fullt läsbar med Python
+        data = json.loads(json_data)
 
-    ## Returnerar python dict.
-    return data
+        ## Returnerar python dict.
+        return data
 
+    except Exception as e:
+        return e
 
 def random_beach(list):
     """Funktion för att välja en badplats slumpmässigt från lista med badplatser."""
