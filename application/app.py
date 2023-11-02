@@ -238,7 +238,7 @@ def random_anything():
     else:
         anything_suggestion = "Kunde inte hämta aktivitetsförslag från API."
 
-    return render_template("index.html", anything_suggestion=anything_suggestion)
+    return render_template("anything.html", anything_suggestion=anything_suggestion)
 
 
 
