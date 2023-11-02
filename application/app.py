@@ -11,17 +11,18 @@ app= Flask(__name__)
 @app.route("/")
 def weather():
     # Hämtar data om användaren
-    info = func.json_loads_on_uncorrected_list("http://ipinfo.io/json")
+    info = func.json_loads("http://ipinfo.io/json")
 
     # Hämtar koordinater från den datan om användaren
     lat = info["loc"].split(",")[0]
     lon = info["loc"].split(",")[1]
 
     # Ser regn och molntäcke på de koordinaterna
-    weather = func.json_loads_on_uncorrected_list(f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=rain,cloudcover&forecast_days=1")
+    weather = func.json_loads(f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=rain,snowfall,cloudcover")
 
     cloudcover = (weather['current']['cloudcover'])
     rain = (weather["current"]["rain"])
+    snowfall = (weather["current"]["snowfall"])
 
     # uppdaterar länken på knappen på hemsidan beroende på vädret
     link = None
@@ -31,8 +32,11 @@ def weather():
     elif  rain == 0 and cloudcover < 40:
         link = "badplatser"
 
+    elif snowfall > 0:
+        link = "movie"
+    
     else:
-        link = "film"
+        link = "anything"
 
     
     return render_template("index.html", link=link)
