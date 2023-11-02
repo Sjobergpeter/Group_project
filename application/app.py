@@ -43,24 +43,25 @@ def weather():
     return render_template("index.html", link=link)
 
 # Endpoint för badplatser
-@app.route("/badplatser")
+@app.route("/badplatser", methods=["POST", "GET"])
 def beaches_in_Sthml():
-    """Visar lista på badplatser i Stockholm med tillhörande koordinater"""
+    """Denna endpoint hämtar info om badplatser i Stockholm från flera API:er. Visar användaren ett slumpmässigt förslag. Ger möjligheten att söka info
+    om varje badplats samt söka badplatser efter stadsdel. Returnerar allt i fint format."""
 
     ## Inhämtar data om badplater från extern API
     data_url = f"https://apigw.stockholm.se/api/PublicHittaCMS/api/serviceunits?&filter[servicetype.id]=104&page[limit]=1500&page[offset]=0&sort=name"
 
     ## Anropar funktionen som konverterar json data till python och sparar i variabel.
-    beach_list=func.json_loads_on_uncorrected_list(data_url)
+    beach_list=func.json_loads(data_url)
 
-    ## Lista på badplatser med tillhörande url för detaljerad info
+    ## Lista på badplatser med tillhörande url för att inhämta mer info om varje resp badplats.
     beach_info = []
 
     ## Iteration för att spara namn och url för varje badplats som dictionary i listan beach_info
     for info in beach_list["data"]:
-        beach_name_unicode=info["attributes"]["name"]
+        beach_name=info["attributes"]["name"]
         beach_link = info["links"]["self"]
-        beach_info.append({"name": beach_name_unicode, "url": beach_link})
+        beach_info.append({"name": beach_name, "url": beach_link})
 
     ## Iteration för att komma åt varje enskild badplats url.
     url_list=[]
@@ -68,13 +69,12 @@ def beaches_in_Sthml():
         data_url = url["url"]
         url_list.append(data_url)
 
-
     ## Lägga stadsdel för badplatser som ordbok i en lista.
     beach_name_info = []
 
     for one_url in url_list:
-        """Här inhämtar jag mer info från en annan API"""
-        beach_url = func.json_loads_on_uncorrected_list(one_url)
+        """Här inhämtar jag mer info varje badplats från en annan API"""
+        beach_url = func.json_loads(one_url)
         for detailed_info in beach_url["included"]:
             if "name" in detailed_info["attributes"]:
                 beach_location = detailed_info["attributes"]["name"]
@@ -89,29 +89,36 @@ def beaches_in_Sthml():
         complete_dict=dict(list(a.items()) + list(b.items()))
         complete_beach_list.append(complete_dict)
 
-    # Funktion för att söka stränder på samma location:
-    #search_place = "Bromma"
-    #for place in complete_beach_list:
-        #if place["location"]== search_place:
-            #return place["name"]
+    ## Anropar funktion från func.py för att ge slumpnässigt förslag på badplats samt tillhörande stadsdel.
+    random_beach = func.random_beach(complete_beach_list)
 
-    # Funktion för att söka badplats och visa location
-    #search_beach = "Tanto strandbad"
-    #for place in complete_beach_list:
-        #if place["name"]== search_beach:
-            #return place["location"]
+    ## Lista där stadsdel bara förekommer 1 gång, kan visas i rulllistan i badplats.html.
+    unique_locations= []
+    for dictionary in complete_beach_list:
+        location = dictionary.get("location")
+        if location and location not in unique_locations:
+            # Om location inte i listan ska den läggas till
+            unique_locations.append(location)
 
-    ## Ny lista, nu väljer jag kolumnnamn till tabellen istället för nycklar.
-    list_column_name = [{"Badplats": element["name"], "Stadsdel": element["location"]} for element in complete_beach_list]
+    ## Här följer koden som visar resultat för vald sökning, antingen badplats som visar var den ligger eller stadsdel för att hitta badplatser
+    ### Skapar tom lista för att spara sökresultat
+    matching_places = []
 
-    ## Konverterar listan till en tabell med pandas, utan index.
-    df = pd.DataFrame(list_column_name)
-    table_data=df.to_html(index=False)
+    ### När användaren skickar iväg data för sökning körs denna kod:
+    if request.method == "POST":
+        ### Hantera data som har skickats in via POST-förfrågan
+        search_beach = request.form["selected_search"]
+        search_location = request.form["selected_beach"]
 
-    return table_data
+        ### Söka badplats efter satdsdel och vice versa
+        for places in complete_beach_list:
+            if places["location"] == search_beach or places["name"] == search_location:
+                ### Skriva ut sökresultat snyggt, inte som dict eller lista. Mer formattering i html filen.
+                matching_places.append({"Badplats": places["name"], "Stadsdel": places["location"]})
 
-    # Med denna return visas html template med rullista så att man kan välja bad/ställe:
-    ## render_template("badplats.html", complete_beach_list=complete_beach_list)
+    return render_template("badplats.html", random_beach=random_beach, complete_beach_list=complete_beach_list,
+                           unique_locations=unique_locations, matching_places=matching_places)
+
 
 
 @app.route("/books")
