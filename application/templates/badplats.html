@@ -4,6 +4,8 @@
 Badplatser
 {% endblock %}
 
+{% block header %}{% include "navbar.html" %}{% endblock %}
+
 {% block content %}
     <h2>Whatodos förslag: </h2>
     {{ random_beach|safe }}
