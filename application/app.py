@@ -208,6 +208,39 @@ def books_form():
 
         return render_template('books_form.html')
     
+@app.route('/', methods=['GET', 'POST'])
+
+def movie_viewer():
+    if request.method == 'POST':
+        movie_name = request.form['movie_name']
+        # api key for omdb
+        api_key = "1d6bf689"
+        url = f"https://www.omdbapi.com/?t={movie_name}&apikey={api_key}"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            movie_info = response.json()
+
+            if movie_info:
+                return render_template('index.html', movie_info=movie_info)
+            
+        return "Movie information not found."
+    
+    return render_template('film.html')
+
+@app.route("/anything")
+def random_anything():
+    response = requests.get("https://www.boredapi.com/api/activity")
+
+    if response.status_code == 200:
+        data = response.json()
+        anything_suggestion = data.get("activity")
+    else:
+        anything_suggestion = "Kunde inte hämta aktivitetsförslag från API."
+
+    return render_template("index.html", anything_suggestion=anything_suggestion)
+
+
 
 @app.errorhandler(404)
 def not_found_error(error):
