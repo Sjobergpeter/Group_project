@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Viewer</title>
+</head>
+<body>
+    <h1>Movie Viewer</h1>
+    
+    <!-- Form for entering movie name -->
+    <form id="movieForm" method="post" action="/">
+        <label for="movie_name">Enter a movie name:</label>
+        <input type="text" name="title" id="movie_name" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display movie information if available -->
+    {% if movie_info %}
+        <h2>Movie Information</h2>
+        <p><strong>Poster:</strong> {{ movie_info['Poster'] }}</p>
+        <p><strong>Title:</strong> {{ movie_info['Title'] }}</p>
+        <p><strong>Year:</strong> {{ movie_info['Year'] }}</p>
+        <p><strong>Type:</strong> {{ movie_info['Type'] }}</p>
+        <p><strong>Runetime:</strong> {{ movie_info['Runetime'] }}</p>
+        <p><strong>Genre:</strong> {{ movie_info['Genre'] }}</p>
+        <p><strong>Director:</strong> {{ movie_info['Director'] }}</p>
+        <p><strong>Actors:</strong> {{ movie_info['Actors'] }}</p>
+        <p><strong>Plot:</strong> {{ movie_info['Plot'] }}</p>
+    {% endif }
+</body>
+</html>
