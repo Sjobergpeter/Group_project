@@ -227,7 +227,21 @@ def movie_viewer():
         return "Movie information not found."
     
     return render_template('film.html')
-    
+
+@app.route("/anything")
+def random_anything():
+    response = requests.get("https://www.boredapi.com/api/activity")
+
+    if response.status_code == 200:
+        data = response.json()
+        anything_suggestion = data.get("activity")
+    else:
+        anything_suggestion = "Kunde inte hämta aktivitetsförslag från API."
+
+    return render_template("index.html", anything_suggestion=anything_suggestion)
+
+
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template("/errorhandler.html")
