@@ -223,12 +223,7 @@ def books_form():
 
 def movie_viewer():
     if request.method == 'POST':
-        movie_names = []
-        with open ('movie_list.txt', 'r') as file:
-            for line in file:
-                movie_names.append(line.strip())
-        random_movie_name = random.choice(movie_names)
-
+        movie_name = request.form['movie_name']
         # api key for omdb
         api_key = "1d6bf689"
         url = f"https://www.omdbapi.com/?t={random_movie_name}&apikey={api_key}"
