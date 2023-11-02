@@ -1,17 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Badplatser</title>
-</head>
-<body>
-    </select>
-        <label for="location">Stadsdel</label><br/>
-        <select class="form-select" aria-label="Default select example" name="">
-          <option selected>Välj stadsdel</option>
-            {% for location in complete_beach_list %}
-                <option value="{{ location.location  }}">{{ location["location"] }}</option>
-            {% endfor %}
-    </select>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}
+Badplatser
+{% endblock %}
+
+{% block content %}
+    <h2>Whatodos förslag: </h2>
+    {{ random_beach|safe }}
+
+    <form action="/" method="post">
+        <label for="stadsdel">Hitta badplatser för vald stadsdel</label><br/>
+        <select class="form-select" aria-label="Default select example" name="selected_search">
+              <option selected>Välj stadsdel</option>
+              {% for location in unique_locations %}
+                <option value="{{ location  }}">{{ location }}</option>
+              {% endfor %}
+        </select>
+
+        <label for="badplats">Hitta stadsdel för vald badplats</label><br/>
+        <select class="form-select" aria-label="Default select example" name="selected_beach">
+              <option selected>Välj badplats</option>
+              {% for beach in complete_beach_list %}
+                <option value="{{ beach.name  }}">{{ beach['name'] }}</option>
+              {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary mt-5">Sök</button>
+    </form>
+    <h2>Sökresultat:</h2>
+    <ul>
+      {% for place in matching_places %}
+        <li>{{ place['Badplats'] }}: {{ place['Stadsdel'] }}</li>
+      {% endfor %}
+    </ul>
+{% endblock %}
