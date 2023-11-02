@@ -1,3 +1,10 @@
 .DS_Store
 venv
 __pycache__
+application/app.py
+application/templates/index.html
+application/static/khaby1.jpeg
+application/static/khaby.jpg
+application/templates/layout.html
+application/templates/books.html
+application/app.py

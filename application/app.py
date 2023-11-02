@@ -23,9 +23,10 @@ def weather():
     cloudcover = (weather['current']['cloudcover'])
     rain = (weather["current"]["rain"])
     snowfall = (weather["current"]["snowfall"])
-
+    
     # uppdaterar länken på knappen på hemsidan beroende på vädret
     link = None
+
     if rain != 0:
         link = "books"
 
