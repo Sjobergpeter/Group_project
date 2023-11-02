@@ -1,4 +1,4 @@
-from your_flask_app import app
+!from your_flask_app import app
 import pytest
 
 @pytest.fixture
