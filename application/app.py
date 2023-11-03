@@ -101,13 +101,17 @@ def beaches_in_Sthml():
 
     ## Här följer koden som visar resultat för vald sökning, antingen badplats som visar var den ligger eller stadsdel för att hitta badplatser
     ### Skapar tom lista för att spara sökresultat
-    matching_places = []
 
+
+
+    matching_places = []
     ### När användaren skickar iväg data för sökning körs denna kod:
     if request.method == "POST":
-        ### Hantera data som har skickats in via POST-förfrågan
+    ### Hantera data som har skickats in via POST-förfrågan
         search_beach = request.form["selected_search"]
         search_location = request.form["selected_beach"]
+
+        cookie_value = search_beach
 
         ### Söka badplats efter satdsdel och vice versa
         for places in complete_beach_list:
@@ -115,8 +119,17 @@ def beaches_in_Sthml():
                 ### Skriva ut sökresultat snyggt, inte som dict eller lista. Mer formattering i html filen.
                 matching_places.append({"Badplats": places["name"], "Stadsdel": places["location"]})
 
-    return render_template("badplats.html", random_beach=random_beach, complete_beach_list=complete_beach_list,
-                           unique_locations=unique_locations, matching_places=matching_places)
+        cookie_resp = make_response(render_template("badplats.html", random_beach=random_beach, complete_beach_list=complete_beach_list,
+                           unique_locations=unique_locations, matching_places=matching_places, search_beach=search_beach))
+        cookie_resp.status_code = 200
+        cookie_resp.set_cookie("search_cookie", cookie_value)
+        return cookie_resp
+
+    else:
+        search_cookie = request.cookies.get("search_cookie")
+        return render_template("badplats.html", random_beach=random_beach, complete_beach_list=complete_beach_list,
+                           unique_locations=unique_locations, matching_places=matching_places, cookie_value=search_cookie)
+                           
 
 
 
