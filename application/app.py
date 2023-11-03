@@ -242,8 +242,9 @@ def movie_viewer():
                 return render_template('film.html', movie_info=movie_info)
             
         return "Movie information not found."
-    
-    return render_template('film.html')
+    response = make_response(render_template('film.html'))
+    response.set_cookie('myCookie', 'myValue')
+    return response
 
 @app.route("/anything")
 def random_anything():
