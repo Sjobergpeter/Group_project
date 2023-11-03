@@ -14,7 +14,7 @@ Få böcker efter ämne
 <form method="post" action="/books_form">
     <label for="topic">Vad är du intresserad av?</label>
     <div class="input-group mb-3">
-        <input type="text" id="topic" name="topic" class="form-control" value="humor">
+        <input type="text" id="topic" name="topic" class="form-control" value="{{ books_form_cookie }}">
     </div>
 
     <button type="submit" class="btn btn-primary">Skicka</button>

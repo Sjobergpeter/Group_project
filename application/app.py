@@ -3,7 +3,6 @@ import requests
 import random
 from . import func
 from application import func
-import pandas as pd
 
 app= Flask(__name__)
 
@@ -214,10 +213,9 @@ def books_form():
         else:
             data = "Boker misslyckades med att laddas!"
         
-        resp = make_response(render_template('books_form.html', data=data))
-        resp.set_cookie('cookie_name', topic)
-        x=request.cookies.get('cookie_name')
-        print(x)
+        books_form_cookie=request.cookies.get('books_form_cookie')
+        resp = make_response(render_template('books_form.html', data=data, books_form_cookie=books_form_cookie))
+        resp.set_cookie('books_form_cookie', topic)
         return resp 
 
 
