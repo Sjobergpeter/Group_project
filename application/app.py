@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, make_response, render_template, request
 import requests
 import random
 from . import func
@@ -214,7 +214,12 @@ def books_form():
         else:
             data = "Boker misslyckades med att laddas!"
         
-        return render_template('books_form.html', data=data)
+        resp = make_response(render_template('books_form.html', data=data))
+        resp.set_cookie('cookie_name', topic)
+        x=request.cookies.get('cookie_name')
+        print(x)
+        return resp 
+
 
     else:
 
@@ -257,6 +262,8 @@ def random_anything():
         anything_suggestion = "Kunde inte hämta aktivitetsförslag från API."
 
     return render_template("anything.html", anything_suggestion=anything_suggestion)
+
+
 
 @app.errorhandler(404)
 def not_found_error(error):

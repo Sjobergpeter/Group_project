@@ -7,13 +7,13 @@ from application import func
 def client():
     return app.app.test_client()
 
-def test_index_online(client: FlaskClient):
+def test_books_online(client: FlaskClient):
     '''GIVEN user requests / route
     WHEN a GET request is made to the root path
     THEN home.html loads'''
 
     # client makes a GET request to the root path
-    resp = client.get('/')
+    resp = client.get('/books')
 
     # checking if there is a response
     assert resp.status_code == 200
