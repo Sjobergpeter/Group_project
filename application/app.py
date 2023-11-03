@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template, request
+from flask import Flask, make_response, render_template, request, make_response
 import requests
 import random
 from . import func
