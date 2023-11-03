@@ -1,49 +1,97 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-        <title>Movie Viewer</title>
-        <style>
-            /* Center the main content vertically and horizontally */
-            .center-content {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh; /* Use min-height to center even if content is smaller */
-            }
-            
-            /* Style your form as needed */
-            #movieForm {
-                text-align: center;
-            }
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <title>Movie Viewer</title>
+    <style>
+        body {
+            min-height: 100vh;
+        }
+
+ 
+        .center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        #banner {
+            background-color: #c049f7;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        #banner2 {
+            background-color: #000000; 
+            color: #fff; 
+            padding: 10px;
+            text-align: center;
+        }
+
+        #movieForm {
+            text-align: center;
+        }
+
+        .movie-info-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .movie-info {
+            text-align: left;
+            padding: 10px;
+        }
+        
+        .movie-plot {
+            word-wrap: break-word; /* Break text into new lines */
+            max-width: 50%; /* Adjust the max-width */
+        }
     </style>
 </head>
 <body>
     {% block header %}{% include "navbar.html" %}{% endblock %}
-
     <div class="center-content">
-    <h1>Movie Viewer</h1>
-    
-    <!-- Form for entering movie name -->
-    <form id="movieForm" method="POST" action="/film">
-        <label for="movie_name">Random movie:</label>
-        <name="movie_name" id="movie_name" required>
-            <button type="submit">Next</button>
-        </form>
-
-    <!-- Display movie information if available -->
-    {% if movie_info %}
-        <h2>Movie Information</h2>
-        <img src="{{ movie_info['Poster'] }}" alt="{{ movie_info['Title'] }} Poster">
-        <p><strong>Title:</strong> {{ movie_info['Title'] }}</p>
-        <p><strong>Year:</strong> {{ movie_info['Year'] }}</p>
-        <p><strong>Type:</strong> {{ movie_info['Type'] }}</p>
-        <p><strong>Runtime:</strong> {{ movie_info['Runtime'] }}</p>
-        <p><strong>Genre:</strong> {{ movie_info['Genre'] }}</p>
-        <p><strong>Director:</strong> {{ movie_info['Director'] }}</p>
-        <p><strong>Actors:</strong> {{ movie_info['Actors'] }}</p>
-        <p><strong>Plot:</strong> {{ movie_info['Plot'] }}</p>
+        <header>
+            <img src="{{ url_for('static', filename='/film_banner.jpg') }}" width="1500" height="400">
+            
+            <!-- Form for entering movie name -->
+            <div id=banner2>
+                <form id="movieForm" method="POST" action="/film">
+                    <label for="movie_name">Random movie:</label>
+                    <name="movie_name" id="movie_name" required>
+                        <button type="submit">Next</button>
+                    </form>
+                    <!--form id="movieSearchForm" method="POST" action="/film">
+                        <label for="smovie_name">Search for a movie:</label>
+                        <input type="text" name="smovie_name" id="smovie_name" required>
+                        <button type="submit">Search</button>
+                    </form (potential search function for the future)-->
+                </form>
+            </div>
+            <!-- Return from API -->
+            {% if movie_info %}
+            <div id="banner" width="1500" height="800"> 
+                <div class="movie-info-container">
+            <img src="{{ movie_info['Poster'] }}" alt="{{ movie_info['Title'] }} Poster">
+            <div class="movie-info">
+                <h2>Movie Information</h2>
+                <p><strong>Title:</strong> {{ movie_info['Title'] }}</p>
+                <p><strong>Year:</strong> {{ movie_info['Year'] }}</p>
+                <p><strong>Type:</strong> {{ movie_info['Type'] }}</p>
+                <p><strong>Runtime:</strong> {{ movie_info['Runtime'] }}</p>
+                <p><strong>Genre:</strong> {{ movie_info['Genre'] }}</p>
+                <p><strong>Director:</strong> {{ movie_info['Director'] }}</p>
+                <p><strong>Actors:</strong> {{ movie_info['Actors'] }}</p>
+                <p class="movie-plot"><strong>Plot:</strong> {{ movie_info['Plot'] }}</p>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
 </body>
