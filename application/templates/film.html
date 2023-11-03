@@ -67,11 +67,14 @@
                     <name="movie_name" id="movie_name" required>
                         <button type="submit" onclick="setCookie()">Next</button>
                     </form>
+                    <div id="cookieCounter">Next counter: 0</div>
                     <script>
                         var count = parseInt(getCookie("count")) || 0;
+                        document.getElementById("cookieCounter").innerHTML = "Times pressed: " + count;
                         function setCookie() {
                             count++;
                             document.cookie = "count=" + count + "; expires=Fri, 03 Nov 2023 23:59:59 CET; path=/";
+                            document.getElementById("cookieCounter").innerHTML = "Next counter: " + count;
                         }
                         function getCookie(name) {
                             var value = "; " + document.cookie;
