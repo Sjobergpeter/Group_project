@@ -257,8 +257,6 @@ def random_anything():
 
     return render_template("anything.html", anything_suggestion=anything_suggestion)
 
-
-
 @app.errorhandler(404)
 def not_found_error(error):
     message = "Page not found"

@@ -30,6 +30,9 @@ def json_loads(data_url):
 def random_beach(list):
     """Funktion för att välja en badplats slumpmässigt från lista med badplatser."""
 
+    if not list:
+        return None
+
     random_dict = random.choice(list)
 
     ## Formaterar utskrift med f-string för att visa badplats och stadsdel.
